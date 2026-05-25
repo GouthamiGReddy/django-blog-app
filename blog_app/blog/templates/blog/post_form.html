@@ -1,0 +1,61 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ action }} Post — The Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+  .back-link {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 2.5rem;
+  }
+  .back-link:hover { color: var(--rust); }
+  .form-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .form-actions { display: flex; gap: 0.75rem; margin-top: 2rem; align-items: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if post %}
+  <a href="{% url 'post_detail' post.pk %}" class="back-link">← Back to Post</a>
+{% else %}
+  <a href="{% url 'post_list' %}" class="back-link">← All Posts</a>
+{% endif %}
+
+<h1 class="form-heading">{{ action }} Post</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <ul class="errorlist">
+          {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">{{ action }} Post</button>
+    {% if post %}
+      <a href="{% url 'post_detail' post.pk %}" class="btn">Cancel</a>
+    {% else %}
+      <a href="{% url 'post_list' %}" class="btn">Cancel</a>
+    {% endif %}
+  </div>
+</form>
+{% endblock %}

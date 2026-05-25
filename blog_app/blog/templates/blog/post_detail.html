@@ -1,0 +1,78 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }} — The Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+  .back-link {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 2.5rem;
+  }
+  .back-link:hover { color: var(--rust); }
+  .post-meta {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .post-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .post-byline {
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .post-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    white-space: pre-wrap;
+  }
+  .post-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .updated-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-left: auto;
+    font-style: italic;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'post_list' %}" class="back-link">← All Posts</a>
+
+<article>
+  <div class="post-meta">{{ post.created_at|date:"F j, Y" }}</div>
+  <h1 class="post-title">{{ post.title }}</h1>
+  <div class="post-byline">By {{ post.author }}</div>
+  <div class="post-body">{{ post.content }}</div>
+
+  <div class="post-footer">
+    <a href="{% url 'post_edit' post.pk %}" class="btn">Edit</a>
+    <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
+    {% if post.updated_at != post.created_at %}
+      <span class="updated-note">Updated {{ post.updated_at|date:"F j, Y" }}</span>
+    {% endif %}
+  </div>
+</article>
+{% endblock %}

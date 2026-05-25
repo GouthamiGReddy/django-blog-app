@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}The Blog{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #1a1a18;
+      --paper: #f5f0e8;
+      --cream: #ede8dc;
+      --rust: #b5401e;
+      --muted: #7a7060;
+      --rule: #c8c0b0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 2px solid var(--ink);
+      padding: 1.5rem 0 1rem;
+      text-align: center;
+    }
+    header a { text-decoration: none; color: inherit; }
+    .site-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .site-tagline {
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+    nav {
+      margin-top: 1rem;
+      border-top: 1px solid var(--rule);
+      padding-top: 0.75rem;
+    }
+    nav a {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--rust); }
+
+    /* ── Layout ── */
+    .container { max-width: 780px; margin: 0 auto; padding: 0 1.5rem; }
+    main { padding: 3rem 0 5rem; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-block;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.55rem 1.4rem;
+      border: 1.5px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .btn:hover { background: var(--ink); color: var(--paper); }
+    .btn-primary { background: var(--ink); color: var(--paper); }
+    .btn-primary:hover { background: var(--rust); border-color: var(--rust); }
+    .btn-danger { border-color: var(--rust); color: var(--rust); }
+    .btn-danger:hover { background: var(--rust); color: var(--paper); }
+
+    /* ── Forms ── */
+    .form-group { margin-bottom: 1.6rem; }
+    label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    input[type=text], textarea {
+      width: 100%;
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      border-bottom: 2px solid var(--ink);
+      padding: 0.7rem 0.9rem;
+      font-family: 'Source Serif 4', serif;
+      font-size: 1rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s;
+    }
+    input[type=text]:focus, textarea:focus { border-bottom-color: var(--rust); }
+    textarea { resize: vertical; }
+    .errorlist { list-style: none; color: var(--rust); font-size: 0.85rem; margin-top: 0.3rem; }
+
+    /* ── Flash messages ── */
+    .messages { list-style: none; margin-bottom: 2rem; }
+    .messages li {
+      padding: 0.75rem 1rem;
+      border-left: 3px solid var(--rust);
+      background: var(--cream);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="{% url 'post_list' %}"><div class="site-title">The Blog</div></a>
+      <div class="site-tagline">Ideas Worth Writing Down</div>
+      <nav>
+        <a href="{% url 'post_list' %}">All Posts</a>
+        <a href="{% url 'post_create' %}">New Post</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      {% if messages %}
+        <ul class="messages">
+          {% for msg in messages %}
+            <li>{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; {% now "Y" %} The Blog &mdash; Built with Django
+    </div>
+  </footer>
+</body>
+</html>

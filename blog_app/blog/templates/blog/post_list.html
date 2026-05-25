@@ -1,0 +1,112 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}All Posts — The Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+  .page-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .post-count {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+  }
+  .post-card {
+    border-top: 1px solid var(--rule);
+    padding: 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-start: start;
+  }
+  .post-card:last-child { border-bottom: 1px solid var(--rule); }
+  .post-date {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .post-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .post-title a { text-decoration: none; color: inherit; }
+  .post-title a:hover { color: var(--rust); }
+  .post-excerpt {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .post-author {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.75rem;
+    font-style: italic;
+  }
+  .post-actions { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
+  .empty-state {
+    text-align: center;
+    padding: 5rem 0;
+    color: var(--muted);
+  }
+  .empty-state .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+  }
+  .empty-state h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--ink);
+  }
+  .header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="header-row">
+  <h1 class="page-heading">All Posts</h1>
+  <a href="{% url 'post_create' %}" class="btn btn-primary">+ New Post</a>
+</div>
+<p class="post-count">{{ posts.count }} post{{ posts.count|pluralize }}</p>
+
+{% if posts %}
+  {% for post in posts %}
+    <div class="post-card">
+      <div>
+        <div class="post-date">{{ post.created_at|date:"F j, Y" }}</div>
+        <div class="post-title"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></div>
+        <div class="post-excerpt">{{ post.content|truncatewords:25 }}</div>
+        <div class="post-author">— {{ post.author }}</div>
+      </div>
+      <div class="post-actions">
+        <a href="{% url 'post_detail' post.pk %}" class="btn">Read</a>
+        <a href="{% url 'post_edit' post.pk %}" class="btn">Edit</a>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="empty-state">
+    <div class="empty-icon">✍️</div>
+    <h2>No posts yet</h2>
+    <p>Be the first to write something.</p>
+    <br>
+    <a href="{% url 'post_create' %}" class="btn btn-primary">Write the First Post</a>
+  </div>
+{% endif %}
+{% endblock %}
